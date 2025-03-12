@@ -4,12 +4,14 @@ function ImageGallery() {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
-    // For demo purposes
-    setImages([
-      { id: 1, url: "https://via.placeholder.com/300" },
-      { id: 2, url: "https://via.placeholder.com/300" },
-      { id: 3, url: "https://via.placeholder.com/300" },
-    ]);
+    fetch("http://localhost:3000/images")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data  )
+        setImages(data)
+      })
+      .catch((error) => console.error("Error fetching images:", error));
+
   }, []);
 
   return (
@@ -19,7 +21,7 @@ function ImageGallery() {
         {images.map((image) => (
           <div key={image.id} className="relative group">
             <img
-              src={image.url}
+              src={`http://localhost:3000/${image.filePath}`}
               alt={`Image ${image.id}`}
               className="w-full h-64 object-cover rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105"
             />

@@ -3,12 +3,13 @@ import { useState } from "react";
 function Upload() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
+  const [error, setError] = useState("");
 
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
 
-    // Create preview
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -22,13 +23,26 @@ function Upload() {
     e.preventDefault();
     if (!selectedFile) return;
 
-    // Add your API call here to upload the image
-    // Example with FormData:
     const formData = new FormData();
-    formData.append("image", selectedFile);
+    formData.append("file", selectedFile);
 
-    // Implement your upload logic here
-    console.log("Uploading:", selectedFile);
+    try {
+      const response = await fetch("http://localhost:3000/images/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Image upload failed");
+      }
+
+      setUploadedImageUrl(data.imageUrl);
+      setError("");
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -66,6 +80,21 @@ function Upload() {
               className="max-w-full h-auto mx-auto rounded-lg shadow-lg"
             />
           </div>
+        )}
+
+        {uploadedImageUrl && (
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold mb-2">Uploaded Image:</h3>
+            <img
+              src={uploadedImageUrl}
+              alt="Uploaded"
+              className="max-w-full h-auto mx-auto rounded-lg shadow-lg"
+            />
+          </div>
+        )}
+
+        {error && (
+          <p className="text-red-500 text-center mt-4">Error: {error}</p>
         )}
 
         <div className="flex justify-center">
