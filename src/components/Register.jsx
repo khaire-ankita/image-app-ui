@@ -7,6 +7,7 @@ function Register() {
     password: "",
     confirmPassword: "",
   });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -15,8 +16,28 @@ function Register() {
       alert("Passwords don't match!");
       return;
     }
-    // Add your API call here for registration
-    navigate("/login");
+
+    try {
+      const response = await fetch("http://localhost:3000/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Registration failed");
+      }
+      navigate("/login");
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   const handleChange = (e) => {
@@ -34,6 +55,7 @@ function Register() {
             Create your account
           </h2>
         </div>
+        {error && <p className="text-red-500 text-center">{error}</p>}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>

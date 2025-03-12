@@ -1,19 +1,36 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 
 function Login({ setIsAuthenticated }) {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your API call here for authentication
-    // For demo purposes, we'll just set authenticated to true
-    setIsAuthenticated(true);
-    navigate("/");
+    setError("");
+
+    try {
+      const response = await axios.post("http://localhost:3000/auth/login", {
+        username: formData.email,
+        password: formData.password,
+      });
+
+      if (response.data.access_token) {
+        localStorage.setItem("authToken", response.data.access_token);
+        setIsAuthenticated(true);
+        navigate("/");
+      } else {
+        throw new Error("No token received");
+      }
+    } catch (error) {
+      console.error("Login failed:", error.response?.data || error.message);
+      setError("Login failed. Please check your credentials.");
+    }
   };
 
   const handleChange = (e) => {
@@ -77,6 +94,10 @@ function Login({ setIsAuthenticated }) {
               />
             </div>
           </div>
+
+          {error && (
+            <p className="text-red-500 text-sm text-center">{error}</p>
+          )}
 
           <div>
             <button
