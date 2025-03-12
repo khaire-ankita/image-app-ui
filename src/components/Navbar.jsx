@@ -22,13 +22,13 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
               <>
                 <Link
                   to="/"
-                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md"
+                  className="!text-gray-600 hover:!text-gray-900 px-3 py-2 rounded-md"
                 >
                   Gallery
                 </Link>
                 <Link
                   to="/upload"
-                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md"
+                  className="!text-gray-600 hover:!text-gray-900 px-3 py-2 rounded-md"
                 >
                   Upload
                 </Link>
@@ -43,13 +43,13 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
               <>
                 <Link
                   to="/login"
-                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md"
+                  className="!text-gray-600 hover:!text-gray-900 px-3 py-2 rounded-md"
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+                  className=" hover:!bg-blue-600  hover:!text-white px-4 py-2 rounded-md"
                 >
                   Register
                 </Link>
